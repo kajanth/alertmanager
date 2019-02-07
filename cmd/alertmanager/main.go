@@ -98,10 +98,11 @@ func init() {
 }
 
 func instrumentHandler(handlerName string, handler http.HandlerFunc) http.HandlerFunc {
+	handlerLabel := prometheus.Labels{"handler": handlerName}
 	return promhttp.InstrumentHandlerDuration(
-		requestDuration.MustCurryWith(prometheus.Labels{"handler": handlerName}),
+		requestDuration.MustCurryWith(handlerLabel),
 		promhttp.InstrumentHandlerResponseSize(
-			responseSize.MustCurryWith(prometheus.Labels{"handler": handlerName}),
+			responseSize.MustCurryWith(handlerLabel),
 			handler,
 		),
 	)
